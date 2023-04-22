@@ -1,0 +1,70 @@
+{% extends 'shop/basic.html' %}
+{% block title %} Products {% endblock %}
+{% block body %}
+<div class="container my-4">
+
+  <!-- Product details -->
+
+  <div class="row">
+    <div class="col-md-4">
+      <div class="row my-4">
+        <img src="/media/{{product.image}}">
+      </div>
+      <div class="row" style="display: flex; text-align: center;">
+        <span><a href='/checkout' style="display: flex; justify-content: center;" class="btn btn-success my-1 mx-2">Buy Now</a></span>
+        <span id="divpr{{product.id}}" class="divpr" data-html="true">
+          <a id="pr{{product.id}}" class="btn btn-success cart mx-2" style="display: flex; justify-content: center;"
+            data-html="true">Add to cart</a>
+        </span>
+      </div>
+    </div>
+    <div class="col-md-8 my-4">
+      <h3 id="namepr{{product.id}}">{{product.product_name}}</h3>
+      <h5><b>Rs. <span id="pricepr{{product.id}}">{{product.price}}</span></b></h5>
+      <p>{{product.desc}}</p>
+    </div>
+  </div>
+
+  <!-- Product details end -->
+
+</div>
+{% endblock %}
+{% block js %}
+<script>
+
+  //Add to cart '-' functionality
+  $(".divpr").on("click", "button.minus", function () {
+    console.log("minus clicked");
+    a = this.id.slice(7);
+    cart["pr" + a][0] = cart["pr" + a][0] - 1;
+    cart["pr" + a][0] = Math.max(0, cart["pr" + a][0]);
+    document.getElementById("valpr" + a).innerHTML = cart["pr" + a][0];
+    updateCart("pr" + a);
+  });
+
+  //Add to cart '+' functionality
+  $(".divpr").on("click", "button.plus", function () {
+    console.log("plus clicked");
+    a = this.id.slice(6);
+    cart["pr" + a][0] = cart["pr" + a][0] + 1;
+    document.getElementById("valpr" + a).innerHTML = cart["pr" + a][0];
+
+    updateCart("pr" + a);
+  });
+
+  //Add to cart button functionality
+  $(".divpr").on("click", "a", function () {
+    console.log("clicked");
+    var idstr = this.id.toString();
+    console.log(idstr);
+    if (cart[idstr] == undefined) {
+      qty = 1;
+      item_name = document.getElementById('name' + idstr).innerHTML;
+      price = document.getElementById('price' + idstr).innerHTML;
+      cart[idstr] = [qty, item_name, price];
+    }
+    updateCart(idstr);
+  });
+
+</script>
+{% endblock %}

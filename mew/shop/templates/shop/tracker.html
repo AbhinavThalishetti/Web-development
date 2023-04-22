@@ -1,0 +1,106 @@
+{% extends 'shop/basic.html' %}
+{% block title %} Tracker Status {% endblock %}
+{% block trackeractive %}active{% endblock %}
+{% block body %}
+<div class="container" id="tracker">
+
+    <!-- Order details -->
+    <div class="col my-5">
+        <h3>Enter details :</h3>
+        <form class="row g-3 my-2" method="post" action="#" id="trackerForm"> 
+            {% csrf_token %} <!-- To prevent XSS attacks -->
+            <div class="col-md-6">
+                <label for="order_id" class="form-label">Order Id :</label>
+                <input type="number" class="form-control" id="order_id" name="order_id" placeholder="Order Id">
+            </div>
+            <div class="col-md-6">
+                <label for="email" class="form-label">Email :</label>
+                <input type="email" class="form-control" id="email" name="email" placeholder="Email">
+            </div>
+            <div class="col-12">
+                <button id="trackbtn" type="submit" class="btn btn-success">Track order</button>
+            </div>
+        </form>
+    </div>
+    <!-- Order details end -->
+
+    <!-- Tracking details -->
+    <div class="col my-5">
+        <h3>Track your order :</h3>
+        <ul class="list-group mt-4" id="items">
+            Enter order details to track your order!
+        </ul>
+    </div>
+    <!-- Tracking details end -->
+
+    <!-- Item details -->
+    <div class="col my-5">
+        <h3>Order details :</h3>
+        <ul class="list-group mt-4" id="citems">
+            Enter the details to get order details!
+        </ul>
+    </div>
+    <!-- Item details end -->
+
+</div>
+{% endblock %}
+{% block js %}
+<script>
+
+    //Tracker functionality
+    $("#trackerForm").submit(function (event) {
+
+        $("#items").empty();
+        $("#citems").empty();
+
+        var formData = {
+            "order_id": $('input[name=order_id]').val(),
+            "email": $('input[name=email]').val(),
+            "csrfmiddlewaretoken": $('input[name=csrfmiddlewaretoken]').val()
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: '/tracker/',
+            data: formData,
+            encode: true
+        })
+
+            //Updating tracking and item details
+            .done(function (data) {
+                Data = JSON.parse(data);
+                if (Data["status"] == "success") {
+                    updates = Data["updates"];
+                    for (i = 0; i < updates.length; i++) {
+                        let text = updates[i]["text"];
+                        let time = updates[i]["time"];
+                        mystr = `<li class="list-group-item d-flex justify-content-between align-items-center">
+                                ${text}
+                                <span class="badge bg-primary rounded-pill">${time}</span>
+                                </li>`
+                        $('#items').append(mystr);
+                    }
+                    cart = JSON.parse(Data["itemsJson"]);
+                    mystr = ``
+                    for (var item in cart) {
+                        let name = cart[item][1];
+                        let qty = cart[item][0];
+                        mystr = mystr + `<li class="list-group-item d-flex justify-content-between align-items-center">
+                                        ${name}
+                                        <span class="badge bg-primary rounded-pill">${qty}</span>
+                                        </li>`
+                    }
+                    $('#citems').append(mystr);
+                }
+                else {
+                    mystr = `<li class="list-group-item d-flex justify-content-between align-items-center">
+                            Sorry, we are not able to fetch your order details. Please check your order id and email, then try again.
+                            </li>`
+                    $('#items').append(mystr);
+                    $('#citems').append(mystr);
+                }
+            });
+        event.preventDefault();
+    });
+</script>
+{% endblock %}

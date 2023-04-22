@@ -1,0 +1,105 @@
+{% extends 'shop/basic.html' %}
+{% block title %} Checkout {% endblock %}
+{% block body %}
+<div class="container">
+
+  <!-- Cart details -->
+
+  <div class="col my-5">
+    <h3>Review your cart items :</h3>
+    <ul class="list-group mt-4" id="items"></ul>
+  </div>
+
+  <!-- Cart details end -->
+
+  <!-- Address and details -->
+
+  <div class="col my-5">
+    <h3>Address and other details :</h3>
+    <form class="row g-3 my-2" method="post" action="/checkout/"> 
+      {% csrf_token %} <!-- To prevent XSS attacks -->
+      <input type="hidden" name="items_json" id="items_json" />
+      <input type="hidden" name="amount" id="amount" />
+      <div class="col-md-6">
+        <label for="name" class="form-label">Name :</label>
+        <input type="name" class="form-control" id="name" name="name" placeholder="Name" />
+      </div>
+      <div class="col-md-6">
+        <label for="email" class="form-label">Email :</label>
+        <input type="email" class="form-control" id="email" name="email" placeholder="Email" />
+      </div>
+      <div class="col-12">
+        <label for="address1" class="form-label">Address line 1 :</label>
+        <input type="text" class="form-control" id="address1" name="address1" placeholder="Address line 1" />
+      </div>
+      <div class="col-12">
+        <label for="address2" class="form-label">Address line 2 :</label>
+        <input type="text" class="form-control" id="address2" name="address2" placeholder="Address line 2" />
+      </div>
+      <div class="col-md-6">
+        <label for="city" class="form-label">City :</label>
+        <input type="text" class="form-control" id="city" name="city" placeholder="City" />
+      </div>
+      <div class="col-md-4">
+        <label for="state" class="form-label">State :</label>
+        <input type="text" class="form-control" id="state" name="state" placeholder="City" />
+      </div>
+      <div class="col-md-2">
+        <label for="zip-code" class="form-label">Zip :</label>
+        <input type="text" class="form-control" id="zip-code" name="zip-code" />
+      </div>
+      <div class="col-12">
+        <label for="phone" class="form-label">Phone :</label>
+        <input type="tel" class="form-control" id="phone" name="phone" />
+      </div>
+      <div class="col-12">
+        <button type="submit" class="btn btn-success">Submit</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Address and details end -->
+
+</div>
+{% endblock %} 
+{% block js %}
+<script>
+
+  //Cart empty condition
+  if ($.isEmptyObject(cart)) {
+    mystr = `<h4 style='display: flex; justify-content: center;'>Your cart is empty</h4>`;
+    $("#items").append(mystr);
+  }
+  //Cart not empty condition
+  else {
+    var total_sum = 0;
+    for (var item in cart) {
+      let name = cart[item][1];
+      let qty = cart[item][0];
+      let sum = cart[item][2] * qty;
+      mystr = `<li class="list-group-item d-flex">
+              <span class="col-11">${name}&nbsp<span class="badge bg-primary rounded-pill align-self-center">${qty}</span></span>
+              
+              <span class="col-2"> : ${qty} x ${cart[item][2]}</span>
+            </li>`;
+      $("#items").append(mystr);
+      total_sum = total_sum + sum;
+    }
+    $("#items").append(
+      `<li class="list-group-item d-flex justify-content-between align-items-center" style="background-color: darkgray;">&nbsp<span class="col-11">Total price : </span><span id="totalPrice" class="col-2">
+      ${total_sum}</span></li>`
+    );
+    $("#items_json").val(JSON.stringify(cart));
+  }
+
+  //Order placed condition
+  // {% if thank %}
+  alert(
+    "Your order has been successfully placed. Your order id is {{id}}. You can use it to track your order using our order tracker."
+  );
+  localStorage.clear();
+  document.location = "/";
+  // {% endif %}
+  $("#amount").val($("#totalPrice").html());
+</script>
+{% endblock %}

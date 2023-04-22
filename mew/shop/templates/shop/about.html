@@ -1,0 +1,21 @@
+{% extends 'shop/basic.html' %}
+{% block title %} About Us {% endblock %}
+{% block aboutactive %}active{% endblock %}
+{% block body %}
+<div class="container">
+
+  <!-- About -->
+  <div class="row my-5" style="display: grid; margin: auto; text-align: center;">
+    <div>
+      <img src="/media/shop/about/tet.jpg" class="rounded-circle" width="140" height="140" alt="tet">
+      <h2 class="fw-normal">TET</h2>
+      <p>Hello guys, I am TET, this is my first django project. I know it is not the best-looking ecommerce website and
+        not well optimized but I gained lots of experience while working on this and I look forward to put it to use for
+        my upcoming projects. As for this project, I made it to learn and practice django.</p>
+      <p><a class="btn btn-secondary" href="/about">View details &raquo;</a></p>
+    </div>
+  </div>
+  <!-- About end -->
+
+</div>
+{% endblock %}

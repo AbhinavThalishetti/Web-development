@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{% block title %}Mew-mew{% endblock %}</title>
+
+
+  <!-- CDN links for Jquery, CSS, Popper and JS -->
+
+  <!-- <script
+      src="https://code.jquery.com/jquery-3.6.3.min.js"
+      integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU="
+      crossorigin="anonymous"
+    ></script>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
+      integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"
+      integrity="sha384-mQ93GR66B00ZXjt0YO5KlohRA5SY2XofN4zfuZxLkoj1gXtW8ANNCe9d5Y3eG5eD"
+      crossorigin="anonymous"
+    ></script> -->
+
+
+  <!-- Static files -->
+
+  {% load static %}
+  <script src="{% static 'shop/scripts/jquery/jquery-3.6.3.js' %}"></script>
+  <link href="{% static 'shop/scripts/css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{% static 'shop/scripts/css/bootstrap-icons.css' %}" rel="stylesheet">
+  <script src="{% static 'shop/scripts/js/bootstrap.bundle.min.js' %}"></script>
+
+
+  <!-- Checking cart and updating count of items in cart -->
+
+  <script>
+    console.log("working");
+    if (localStorage.getItem("cart") == null) {
+      var cart = {};
+    } else {
+      var cart = JSON.parse(localStorage.getItem("cart"));
+      window.onload = function () {
+        document.getElementById("cart").innerHTML = Object.keys(cart).length;
+        updatePopover(cart);
+      };
+    }
+  </script>
+
+
+  <!-- Additional JS and CSS -->
+
+  {% block js0 %} {% endblock %}
+  {% block css %} {% endblock %}
+</head>
+
+<body class="d-flex flex-column justify-content-between" style="min-height: 100vh;">
+
+  <!-- Navbar -->
+
+  <nav class="navbar sticky-top navbar-expand-lg bg-body-tertiary" data-bs-theme="dark">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="/">Mew-mew</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link {% block homeactive %}{% endblock %}" href="/">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link {% block trackeractive %}{% endblock %}" href="/tracker">Tracking status</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link {% block aboutactive %}{% endblock %}" href="/about">About Us</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link {% block contactactive %}{% endblock %}" href="/contact">Contact Us</a>
+          </li>
+        </ul>
+        <form method='get' action="/search" class="d-flex" role="search">
+          <input name="search" id="search" class="form-control me-2" type="search" placeholder="Search"
+            aria-label="Search" />
+          <button class="btn btn-outline-success" type="submit">
+            Search
+          </button>
+          <button id="popcart" type="button" class="btn btn-secondary mx-2" data-bs-container="body"
+            data-bs-toggle="popover" data-bs-placement="bottom" data-bs-content="Your cart is empty" data-html="true">
+            Cart(<span id="cart">0</span>)
+          </button>
+        </form>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Navbar end -->
+
+
+  <!-- Messages -->
+
+  {% if messages %}
+  {% for message in messages %}
+  <div class="alert alert-{{ message.tags }} alert-dismissible fade show m-1" role="alert">
+    <strong>Message :</strong> {{ message }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+  {% endfor %}
+  {% endif %}
+  {% block body %} {% endblock %}
+
+  <!-- Footer -->
+
+  <footer class="text-center text-lg-start text-white mt-5" style="background-color: #1c2331;">
+    <section class="d-flex justify-content-between p-2" style="background-color: #048015">
+      <div class="me-5">
+        <span>Get connected with us on social networks:</span>
+      </div>
+      <div>
+        <a href="#" class="text-light me-4" style="text-decoration: none;">
+          <i class="bi bi-facebook"></i>
+        </a>
+        <a href="#" class="text-white me-4" style="text-decoration: none;">
+          <i class="bi bi-twitter"></i>
+        </a>
+        <a href="#" class="text-white me-4" style="text-decoration: none;">
+          <i class="bi bi-instagram"></i>
+        </a>
+        <a href="#" class="text-white me-4" style="text-decoration: none;">
+          <i class="bi bi-linkedin"></i>
+        </a>
+        <a href="#" class="text-white me-4" style="text-decoration: none;">
+          <i class="bi bi-github"></i>
+        </a>
+      </div>
+    </section>
+    <section class="">
+      <div class="container text-center text-md-start mt-2">
+        <div class="row mt-2">
+          <div class="col-md-3 col-lg-4 col-xl-3 mx-auto mb-2">
+            <h6 class="text-uppercase fw-bold">Dante</h6>
+            <hr class="mb-4 mt-0 d-inline-block mx-auto" style="width: 60px; background-color: #7c4dff; height: 2px" />
+            <p>
+              Lorem ipsum dolor sit amet consectetur adipisicing elit. Nulla quod quaerat recusandae vel officiis alias
+              a quasi atque cumque exercitationem?
+            </p>
+          </div>
+          <div class="col-md-2 col-lg-2 col-xl-2 mx-auto mb-2">
+            <h6 class="text-uppercase fw-bold">Products</h6>
+            <hr class="mb-4 mt-0 d-inline-block mx-auto" style="width: 60px; background-color: #7c4dff; height: 2px" />
+            <p>
+              <a href="/#title_Clothing" class="text-white">Clothes</a>
+            </p>
+            <p>
+              <a href="/#title_Footwear" class="text-white">Footwear</a>
+            </p>
+            <p>
+              <a href="/#title_Watches" class="text-white">Watches</a>
+            </p>
+          </div>
+          <div class="col-md-3 col-lg-2 col-xl-2 mx-auto mb-2">
+            <h6 class="text-uppercase fw-bold">Useful links</h6>
+            <hr class="mb-4 mt-0 d-inline-block mx-auto" style="width: 60px; background-color: #7c4dff; height: 2px" />
+            <p>
+              <a href="#" class="text-white">Your Account</a>
+            </p>
+            <p>
+              <a href="#" class="text-white">Become an Affiliate</a>
+            </p>
+            <p>
+              <a href="#" class="text-white">Shipping Rates</a>
+            </p>
+            <p>
+              <a href="/contact" class="text-white">Help</a>
+            </p>
+          </div>
+          <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mb-md-0 mb-2">
+            <h6 class="text-uppercase fw-bold">Contact</h6>
+            <hr class="mb-4 mt-0 d-inline-block mx-auto" style="width: 60px; background-color: #7c4dff; height: 2px" />
+            <p><i class="bi bi-house-door-fill"></i> Dante colony, Jok city, Mars</p>
+            <p><i class="bi bi-envelope-fill"></i> tet@gmail.com</p>
+            <p><i class="bi bi-telephone-fill"></i> +91 1234567890</p>
+            <p><i class="bi bi-phone-fill"></i> +91 9876543210</p>
+          </div>
+        </div>
+      </div>
+    </section>
+    <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2)">
+      © 2023 Copyright:
+      <a class="text-white" style="text-decoration: none;" href="#">TET</a>
+    </div>
+  </footer>
+  <!-- Footer -->
+
+  {% block js %} {% endblock %}
+
+  <script>
+
+    //Creating popover instance
+    popover = bootstrap.Popover.getOrCreateInstance('#popcart', { html: true });
+
+    //Updating popover content
+    function updatePopover(cart) {
+      if (Object.keys(cart).length > 0) {
+        var popStr = "<h5>Cart items :</h5><div class='my-3'>";
+        var i = 1;
+        for (var item in cart) {
+          if (cart[item][1].length < 20) {
+            var name = cart[item][1];
+          }
+          else {
+            var name = cart[item][1].slice(0, 20) + "...";
+          }
+          popStr =
+            popStr +
+            `<div class="d-flex justify-content-between"><span>${i}. ${name}</span><span>Qty : ${cart[item][0]}</span></div>`;
+          i = i + 1;
+        }
+        popStr = popStr + "</div>";
+        popStr = popStr + "<a href='/checkout' id='checkout' class='btn btn-success mx-2' data-html='true'>Checkout</a> <a id='cleancart' class='btn btn-success mx-2' data-html='true'>Clear cart</a>";
+      }
+      else {
+        var popStr = "Your cart is empty";
+      }
+
+      popover.setContent({
+        '.popover-body': popStr
+      })
+
+    }
+
+    //Clear cart button
+    $('body').on('click', 'a#cleancart', function () {
+      var loc = (window.location).toString();
+      if (loc == "http://127.0.0.1:8000/" | loc.includes("http://127.0.0.1:8000/products/")) {
+        for (var item in cart) {
+          document.getElementById("div" + item).innerHTML = "<a id='" +
+            item +
+            "' style='display: flex; justify-content: center;' class='btn btn-success cart mx-2' data-html='true'>Add to cart</a>";
+        }
+      }
+      else if (loc == "http://127.0.0.1:8000/checkout/") {
+        $("#items").empty();
+        mystr = `<h4 style='display: flex; justify-content: center;'>Your cart is empty</h4>`
+        $('#items').append(mystr);
+      }
+      localStorage.removeItem(cart);
+      cart = {};
+      localStorage.setItem("cart", JSON.stringify(cart));
+      document.getElementById("cart").innerHTML = Object.keys(cart).length;
+      updatePopover(cart);
+    });
+
+    //Updating cart content
+    function updateCart(idstr) {
+      if (cart[idstr][0] > 0) {
+        document.getElementById("div" + idstr).innerHTML =
+          "<button id='minus" +
+          idstr +
+          "' class='btn btn-success minus mx-2'> - </button> <span id='val" +
+          idstr +
+          "' > " +
+          cart[idstr][0] +
+          " </span> <button id='plus" +
+          idstr +
+          "' class='btn btn-success plus mx-2'> + </button>";
+      } else {
+        document.getElementById("div" + idstr).innerHTML =
+          "<a id='" +
+          idstr +
+          "' style='display: flex; justify-content: center;' class='btn btn-success cart mx-2' data-html='true'>Add to cart</a>";
+      }
+      cart = Object.fromEntries(
+        Object.entries(cart).filter(([key, value]) => value[0] != 0)
+      );
+      console.log(cart);
+      localStorage.setItem("cart", JSON.stringify(cart));
+      document.getElementById("cart").innerHTML = Object.keys(cart).length;
+      updatePopover(cart);
+    }
+  </script>
+</body>
+
+</html>

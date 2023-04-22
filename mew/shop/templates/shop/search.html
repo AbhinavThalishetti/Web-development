@@ -1,0 +1,9 @@
+{% extends 'shop/index.html' %}
+{% block title %} Search Results {% endblock %}
+{% block js %}
+<script>
+    //{% if msg == 'error' %}
+        $("div.alert").after(`<a href="/" class="btn btn-success" style="display: grid; margin: auto;">Go back to Home</a>`)
+    //{% endif %}
+</script>
+{% endblock %} 

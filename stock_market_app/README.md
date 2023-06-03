@@ -5,8 +5,8 @@ Simple stock market application made using react.js and node.js. It displays var
 2) Run this command:
 
         npm start
-
-                                                (OR)
+                                        
+      (OR)
 
 1) Download only build folder to reduce the size of the file. Now, open a terminal in build directory. Then, run this command:
 

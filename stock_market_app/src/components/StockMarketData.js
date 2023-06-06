@@ -22,7 +22,7 @@ const StockMarketData = () => {
           {
             headers: {
               'x-rapidapi-host': 'twelve-data1.p.rapidapi.com',
-              'x-rapidapi-key': '175b15283amsh2aa05c5375d2e62p1856ddjsned2407def1a0',
+              'x-rapidapi-key': 'Your-Rapid-API-Key',
             },
             params: {
               symbol: selectedSymbol,
